@@ -1,84 +1,72 @@
-**My Task Manager - Secure Django Web Application**
+🛡️ VigilMJ — Digital Wellbeing & Productivity Suite
+VigilMJ is not just another task manager; it is an all-in-one Digital Wellbeing & Productivity Suite designed to streamline daily workflows, prevent burnout, and foster focus. Built with a modern dark-glassmorphism UI, VigilMJ helps users balance intense task execution with mindful breaks.
 
-    A robust, multi-user Task Management system built using the Django web framework. This project demonstrates the implementation of secure user authentication, database relationship management, and a modern, responsive front-end experience.
+✨ Features Highlight
+🚀 Live Features
+📋 Smart Task Management: Create, edit, and organize daily tasks with live progress tracking and automatic deadline validation.
 
-**🚀 Overview**
-    The primary goal of this project was to create a personalized productivity tool where users can manage their daily tasks in a secure environment. Unlike basic To-Do apps, this application implements strict data isolation, ensuring that every user has a private dashboard.
+📝 Dynamic Notepad: Quick note-taking system to capture ideas, code snippets, and daily thoughts seamlessly.
 
-**✨ Core Functionalities**
-    * User Authentication: Secure signup, login, and logout flow using Django’s built-in authentication system.
+📊 Visual Progress Bar: Real-time analytics on completed vs. pending tasks.
 
-    * Data Ownership: Implemented using a ForeignKey relationship, ensuring users can only access their own records.
+🔒 Secure User Authentication: Individual user accounts with isolated task and note storage.
 
-    * Dynamic Task Management: Full CRUD (Create, Read, Update, Delete) capabilities with real-time status updates.
+🎨 Glassmorphism Metallic UI: Responsive, sleek, and animated dark-mode design powered by Tailwind CSS.
 
-    * Advanced Search & Filter: Efficiently query tasks using a built-in search bar.
+🔮 Upcoming Features (Roadmap)
+⏱️ Pomodoro Timer & Focus Mode: Distraction-free workspace with structured deep-work intervals.
 
-    * State Persistence: Integrated "Mark as Complete" logic with visual feedback (strikethrough and color coding).
+🧘 5-Minute Reset & Mindful Breaks: Built-in wellness prompts to avoid cognitive fatigue.
 
-    * Browser Interaction: Custom JavaScript implementation for dynamic tab titles based on the user's task count and window focus.
+🔔 Break Reminders: Gentle screen notifications encouraging regular posture checks and hydration.
 
-**🛠 Technical Implementation**
-    -> Backend: Python 3.12, Django 5.0.x
+🚨 Forced Shutdown Alarm: (Desktop Helper Script) Intelligent screen-time limiter for healthy work-life balance.
 
-    -> Database: SQLite3 (Development standard)
+🛠️ Tech Stack
+Backend: Python, Django Web Framework
 
-    -> Frontend: HTML5, CSS3 (Custom Geometric Patterns), Bootstrap 5.3
+Frontend: HTML5, Tailwind CSS, JavaScript (ES6)
 
-    -> Architecture: Model-View-Template (MVT)
+Icons & Fonts: FontAwesome 6, Google Fonts (Inter)
 
-**⚙️ Local Development Setup**
-To get this project running on your local machine or in a lab environment:
+Database: SQLite (Development) / PostgreSQL (Production ready)
 
-* Clone the repository:
-
+📦 Installation & Setup Guide
+1. Clone the Repository
 Bash
-    git clone <your-repository-url>
-    cd MyWebProject
-
-* Environment Setup:
-(It is recommended to use a virtual environment.)
-
+git clone https://github.com/your-username/VigilMJ-Task-Manager.git
+cd VigilMJ-Task-Manager
+2. Create & Activate Virtual Environment
 Bash
-    python -m venv venv
-    source venv/bin/Scripts/activate  # On Windows: venv\Scripts\activate
+# Windows
+python -m venv venv
+venv\Scripts\activate
 
-* Install Dependencies:
+# Linux / macOS
+python3 -m venv venv
+source venv/bin/activate
+3. Install Dependencies
+Bash
+pip install -r requirements.txt
+4. Database Migrations
+Bash
+python manage.py makemigrations
+python manage.py migrate
+5. Run the Server
+Bash
+python manage.py runserver
+Visit [http://127.0.0.1:8000/](http://127.0.0.1:8000/) in your browser to explore VigilMJ.
 
-    Bash
-    pip install -r requirements.txt
-
-* Apply Migrations:
-
-    Bash
-    python manage.py migrate
-
-* Start the Server:
-
-    Bash
-    python manage.py runserver
-
-* Access the application at http://127.0.0.1:8000/.
-
-**📂 Project Structure**
-
-    my_site/ - Core project configuration and settings.
-
-    todo_app/ - Application logic including models for task handling and user-specific views.
-
-    templates/ - Modular HTML structure with template inheritance.
-
-    static/ - Managed assets including custom CSS, geometric background patterns, and favicons.
-
-**📝 Key Learning Outcomes**
-    During the development of this project, I focused on:
-    - Implementing Class-Based Views (CBV) for authentication and Function-Based Views (FBV) for task logic.
-
-    - Handling Django's security requirements for POST requests (CSRF protection and Logout methods).
-
-    - Frontend optimization using Glassmorphism and CSS Grid/Flexbox.
-
-------------------------------------------------------------------
-Developed by: MJ Shoyeb
-Roll/ID: 2285055
-Institution: A K Khan UCEP Polytechnic Institute (AKKUPI)
+📂 Project Structure
+Plaintext
+VigilMJ_Project/
+│
+├── my_site/              # Main Django Configuration
+├── todo_app/             # Core Productivity App (Views, Models, Forms)
+├── static/               # CSS, JavaScript & Static Images
+├── templates/            # UI Templates (base.html, index.html, notes.html, etc.)
+├── db.sqlite3            # Database File
+├── manage.py             # Django CLI Tool
+└── README.md             # Project Documentation
+📜 License & Copyright
+© 2026 VigilMJ — Created with ❤️ for high-performance productivity and digital wellbeing. All Rights Reserved.
