@@ -3,6 +3,7 @@
 VigilMJ is not just another task manager; it is an all-in-one Digital Wellbeing & Productivity Suite designed to streamline daily workflows, prevent burnout, and foster focus. Built with a modern dark-glassmorphism UI, VigilMJ helps users balance intense task execution with mindful breaks.
 
 **✨ Features Highlight**
+
 🚀 Live Features
 📋 Smart Task Management: Create, edit, and organize daily tasks with live progress tracking and automatic deadline validation.
 
