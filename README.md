@@ -5,6 +5,7 @@ VigilMJ is not just another task manager; it is an all-in-one Digital Wellbeing 
 **✨ Features Highlight**
 
 🚀 Live Features
+
 📋 Smart Task Management: Create, edit, and organize daily tasks with live progress tracking and automatic deadline validation.
 
 📝 Dynamic Notepad: Quick note-taking system to capture ideas, code snippets, and daily thoughts seamlessly.
@@ -15,6 +16,7 @@ VigilMJ is not just another task manager; it is an all-in-one Digital Wellbeing 
 
 🎨 Glassmorphism Metallic UI: Responsive, sleek, and animated dark-mode design powered by Tailwind CSS.
 
+
 **🔮 Upcoming Features (Roadmap)**
 ⏱️ Pomodoro Timer & Focus Mode: Distraction-free workspace with structured deep-work intervals.
 
@@ -24,6 +26,7 @@ VigilMJ is not just another task manager; it is an all-in-one Digital Wellbeing 
 
 🚨 Forced Shutdown Alarm: (Desktop Helper Script) Intelligent screen-time limiter for healthy work-life balance.
 
+
 **🛠️ Tech Stack**
 Backend: Python, Django Web Framework
 
@@ -32,6 +35,7 @@ Frontend: HTML5, Tailwind CSS, JavaScript (ES6)
 Icons & Fonts: FontAwesome 6, Google Fonts (Inter)
 
 Database: SQLite (Development) / PostgreSQL (Production ready)
+
 
 **📦 Installation & Setup Guide**
 1. Clone the Repository
@@ -59,6 +63,7 @@ _Bash_
 python manage.py runserver
 Visit [http://127.0.0.1:8000/](http://127.0.0.1:8000/) in your browser to explore VigilMJ.
 
+
 **📂 Project Structure**
 
 VigilMJ_Project/
@@ -70,6 +75,7 @@ VigilMJ_Project/
 ├── db.sqlite3            # Database File
 ├── manage.py             # Django CLI Tool
 └── README.md             # Project Documentation
+
 
 **📜 License & Copyright**
 © 2026 VigilMJ — Created with ❤️ for high-performance productivity and digital wellbeing. All Rights Reserved.
