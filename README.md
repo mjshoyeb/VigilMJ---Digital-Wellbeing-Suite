@@ -18,6 +18,7 @@ VigilMJ is not just another task manager; it is an all-in-one Digital Wellbeing 
 
 
 **🔮 Upcoming Features (Roadmap)**
+
 ⏱️ Pomodoro Timer & Focus Mode: Distraction-free workspace with structured deep-work intervals.
 
 🧘 5-Minute Reset & Mindful Breaks: Built-in wellness prompts to avoid cognitive fatigue.
@@ -28,6 +29,7 @@ VigilMJ is not just another task manager; it is an all-in-one Digital Wellbeing 
 
 
 **🛠️ Tech Stack**
+
 Backend: Python, Django Web Framework
 
 Frontend: HTML5, Tailwind CSS, JavaScript (ES6)
@@ -38,11 +40,12 @@ Database: SQLite (Development) / PostgreSQL (Production ready)
 
 
 **📦 Installation & Setup Guide**
+
 1. Clone the Repository
 _Bash_
 git clone https://github.com/your-username/VigilMJ-Task-Manager.git
 cd VigilMJ-Task-Manager
-2. Create & Activate Virtual Environment
+3. Create & Activate Virtual Environment
 _Bash_
 # Windows
 python -m venv venv
@@ -67,15 +70,23 @@ Visit [http://127.0.0.1:8000/](http://127.0.0.1:8000/) in your browser to explor
 **📂 Project Structure**
 
 VigilMJ_Project/
+
 │
 ├── my_site/              # Main Django Configuration
+
 ├── todo_app/             # Core Productivity App (Views, Models, Forms)
+
 ├── static/               # CSS, JavaScript & Static Images
+
 ├── templates/            # UI Templates (base.html, index.html, notes.html, etc.)
+
 ├── db.sqlite3            # Database File
+
 ├── manage.py             # Django CLI Tool
+
 └── README.md             # Project Documentation
 
 
 **📜 License & Copyright**
+
 © 2026 VigilMJ — Created with ❤️ for high-performance productivity and digital wellbeing. All Rights Reserved.
