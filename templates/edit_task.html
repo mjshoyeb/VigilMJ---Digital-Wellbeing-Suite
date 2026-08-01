@@ -39,7 +39,7 @@
 
                 <div>
                     <label for="due_date" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Due Date & Time</label>
-                    <input type="datetime-local" name="due_date" id="due_date" 
+                    <input type="datetime-local" name="due_date" id="due_date" required
                            class="w-full bg-slate-950/50 border border-slate-800 focus:border-emerald-500/60 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-emerald-500/30 transition-all duration-200"
                            value="{{ task.due_date|date:'Y-m-d\TH:i' }}">
                 </div>
@@ -60,8 +60,26 @@
     </div>
 </div>
 
+<!-- ⚙️ অতীত তারিখ ব্লক করার জাভাস্ক্রিপ্ট -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const dueDateInput = document.getElementById('due_date');
+    if (dueDateInput) {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        
+        // বর্তমান সময় অনুযায়ী সর্বনিম্ন তারিখ পিক করার অপশন লক করা হলো
+        dueDateInput.min = `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+});
+</script>
+
 <style>
-    /* জ্যাঙ্গো ফর্ম ফিল্ডগুলোকে ডার্ক গ্লাস থিমের সাথে মানানসই করার কাস্টম CSS হ্যাক */
+    /* জ্যাঙ্গো ফর্ম ফিল্ডগুলোকে ডার্ক গ্লাস থিমের সাথে মানানসই করার কাস্টম CSS */
     form input[type="text"], form textarea, form select {
         width: 100% !important;
         background-color: rgba(2, 6, 23, 0.5) !important;
@@ -77,6 +95,7 @@
         border-color: rgba(52, 211, 153, 0.6) !important;
         box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.3) !important;
     }
+    
     /* 📅 ক্যালেন্ডার আইকন সাদা করার গ্লোবাল রুল */
     input[type="datetime-local"]::-webkit-calendar-picker-indicator {
         filter: invert(1) brightness(1.2) !important;

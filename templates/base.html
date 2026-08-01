@@ -4,17 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>{% block title %} My Task Manager {% endblock %}</title>
+    <title>{% block title %} VigilMJ {% endblock %}</title>
 
     {% load static %}
     <link rel="icon" type="image/png" href="{% static 'image/favicon.png' %}">
     
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
             theme: {
@@ -50,17 +54,32 @@
 
 <body class="flex flex-col min-h-screen text-slate-100 font-sans selection:bg-purple-500 selection:text-white">
 
+    <!-- NAVBAR -->
     <nav class="sticky top-0 z-50 backdrop-blur-md bg-slate-900/40 border-b border-slate-700/50 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 
-                <div class="flex-shrink-0">
+                <!-- BRAND / LOGO -->
+                <div class="flex items-center space-x-8">
                     <a class="flex items-center space-x-3 text-xl font-extrabold tracking-wider bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent hover:scale-105 transition-transform duration-200" href="{% url 'home' %}">
-                        <i class="fas fa-layer-group text-emerald-400 text-2xl"></i>
-                        <span>WORKSPACE</span>
+                        <i class="fas fa-shield-halved text-emerald-400 text-2xl"></i>
+                        <span>VigilMJ</span>
                     </a>
-                </div>
 
+                    <!-- NAVIGATION LINKS -->
+                    {% if request.user.is_authenticated %}
+                    <div class="hidden md:flex items-center space-x-2">
+                        <a href="{% url 'home' %}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors">
+                            <i class="fas fa-tasks me-1 text-emerald-400"></i> Tasks
+                        </a>
+                        <a href="{% url 'note_list' %}" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors">
+                            <i class="fas fa-sticky-note me-1 text-cyan-400"></i> Notes
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- USER MENU & LOGOUT/LOGIN -->
                 <div class="flex items-center space-x-4">
                     {% if request.user.is_authenticated %}
                         <div class="hidden sm:flex items-center space-x-2 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full px-4 py-1.5">
@@ -87,6 +106,7 @@
         </div>
     </nav>
 
+    <!-- MAIN CONTENT AREA -->
     <main class="flex-grow py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {% block content %}
@@ -94,19 +114,19 @@
         </div>
     </main>
 
+    <!-- FOOTER -->
     <footer class="backdrop-blur-lg bg-slate-950/60 border-t border-slate-800/80 mt-auto py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h5 class="text-lg font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent mb-2">My Task Manager</h5>
+            <h5 class="text-lg font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent mb-2">VigilMJ — Digital Wellbeing Suite</h5>
             <p class="text-xs text-slate-400 max-w-md mx-auto mb-4">
-                Streamline your daily workflow, track time limits dynamically, and stay ahead of your deadlines.
+                Streamline your daily workflow, manage tasks, save quick notes, and boost your daily productivity.
             </p>
             <div class="w-16 h-0.5 bg-slate-800 mx-auto mb-4 rounded-full"></div>
             <p class="text-[11px] text-slate-500">
-                &copy; 2026 - All Rights Reserved | Crafted with <i class="fas fa-heart text-rose-500 animate-pulse mx-0.5"></i> in Django
+                &copy; 2026 - All Rights Reserved
             </p>
         </div>
     </footer>
-
 
 </body>
 </html>

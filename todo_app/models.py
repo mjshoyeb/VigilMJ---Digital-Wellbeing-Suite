@@ -12,6 +12,12 @@ class Task(models.Model): # আমাদের টাস্ক মডেল, য
     created_at = models.DateTimeField(auto_now_add=True) # তৈরির সময়
     is_missed = models.BooleanField(default=False) # এই ফিল্ডটি চিহ্নিত করবে যে টাস্কটি শেষ সময় পার হয়ে গেছে কিনা
 
+# Note Model 
+class Note(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title

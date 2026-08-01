@@ -1,8 +1,4 @@
-from urllib import request
-
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Task
-from .forms import TaskForm 
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
@@ -10,8 +6,12 @@ from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone as django_timezone
-from datetime import datetime  # সরাসরি ব্যাকআপের জন্য
-from .models import Note 
+from django.db.models import Q
+from django.contrib import messages
+from datetime import datetime
+
+from .models import Task, Note 
+from .forms import TaskForm 
 
 
 # ----------------------------------------------------
@@ -20,7 +20,7 @@ from .models import Note
 @login_required(login_url='login')
 def home(request):
     search_input = request.GET.get('search-area') or ''
-    # 🔄 LIFO স্টাইলে সাজানোর জন্য সংশোধন (নতুন টাস্ক সবার উপরে থাকবে)
+    # 🔄 LIFO স্টাইলে সাজানোর জন্য (নতুন টাস্ক সবার উপরে থাকবে)
     all_tasks = Task.objects.filter(user=request.user).order_by('-id')
     
     # 🟢 ১. ব্যাকএন্ডে ডেডলাইন চেক করে Missed স্ট্যাটাস লাইভ লক করা
@@ -35,32 +35,44 @@ def home(request):
     total_tasks_count = all_tasks.count()
     completed_count = all_tasks.filter(is_completed=True).count()
     missed_count = all_tasks.filter(is_missed=True).count()
-    # পেন্ডিং মানে যা সম্পন্নও হয়নি, আবার সময়ও শেষ হয়ে যায়নি
     pending_count = all_tasks.filter(is_completed=False, is_missed=False).count()
 
-    # 🟢 ৩. প্রোগ্রেস বার পার্সেন্টেজ (%) ম্যাথমেটিক্যাল ক্যালকুলেশন
+    # 🟢 ৩. প্রোগ্রেস বার পার্সেন্টেজ (%) ক্যালকুলেশন
     progress_percentage = 0
     if total_tasks_count > 0:
         progress_percentage = int((completed_count / total_tasks_count) * 100)
 
-    # টাস্ক সার্চ ফিল্টারিং অপারেশন
+    # টাস্ক সার্চ ফিল্টারিং
     tasks = all_tasks
     if search_input:
         tasks = tasks.filter(title__icontains=search_input)
         
-    # নতুন টাস্ক ক্রিয়েশন পোস্ট রিকোয়েস্ট হ্যান্ডলিং
+    # নতুন টাস্ক ক্রিয়েশন হ্যান্ডলিং
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
+            due_date_str = request.POST.get('due_date')
+            
+            # 🛡️ অতীতের সময় বা ডেট সিলেক্ট করা ঠেকানোর জন্য ভ্যালিডেশন
+            if due_date_str:
+                selected_date = datetime.fromisoformat(due_date_str)
+                # Naive datetime কে timezone aware এ রূপান্তর
+                if django_timezone.is_naive(selected_date):
+                    selected_date = django_timezone.make_aware(selected_date)
+                
+                if selected_date < current_time:
+                    messages.error(request, "Deadline cannot be set in the past! Please choose a future date.")
+                    return redirect('home')
+
             task = form.save(commit=False)
             task.user = request.user
-            task.due_date = request.POST.get('due_date') or None
+            task.due_date = due_date_str or None
             task.save()
+            messages.success(request, "Task created successfully!")
             return redirect('home')
     else:
         form = TaskForm()
         
-    # 🟢 ৪. ফ্রন্টএন্ড গ্লাস-UI তে পাঠানোর জন্য কনটেক্সট ডিকশনারি
     context = {
         'tasks': tasks,
         'form': form,
@@ -79,7 +91,6 @@ def home(request):
 # ----------------------------------------------------
 @login_required(login_url='login')
 def delete_task(request, task_id):
-    # নিরাপত্তার জন্য get_object_or_404 এবং user=request.user ব্যবহার করা হয়েছে
     task = get_object_or_404(Task, id=task_id, user=request.user)
     task.delete() 
     return redirect('home') 
@@ -91,7 +102,7 @@ def delete_task(request, task_id):
 @login_required(login_url='login')
 def complete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
-    task.is_completed = True # সম্পন্ন স্ট্যাটাস ফ্ল্যাগ ট্রু করা হলো
+    task.is_completed = True
     task.save() 
     return redirect('home')
 
@@ -106,12 +117,21 @@ def edit_task(request, task_id):
     if request.method == "POST":
         form = TaskForm(request.POST, instance=task) 
         if form.is_valid():
-            updated_task = form.save(commit=False)
-            
-            # 🟢 এডিট প্যানেল থেকে নতুন ডেডলাইন রিসিভ এবং প্রসেস করা
             due_date_input = request.POST.get('due_date')
+            current_time = django_timezone.now()
+
+            # 🛡️ অতীতের ডেট ভ্যালিডেশন (এডিট পেজের জন্য)
+            if due_date_input:
+                selected_date = datetime.fromisoformat(due_date_input)
+                if django_timezone.is_naive(selected_date):
+                    selected_date = django_timezone.make_aware(selected_date)
+                
+                if selected_date < current_time:
+                    messages.error(request, "Deadline cannot be updated to a past date!")
+                    return render(request, 'edit_task.html', {'form': form, 'task': task})
+
+            updated_task = form.save(commit=False)
             updated_task.due_date = due_date_input if due_date_input else None
-            
             updated_task.save()
             return redirect('home')
     else:
@@ -121,7 +141,7 @@ def edit_task(request, task_id):
 
 
 # ----------------------------------------------------
-# 🔐 ইউজার সিকিউরিটি ও গেটওয়ে (Authentication Views)
+# 🔐 ইউজার সিকিউরিটি ও গেটওয়ে (Authentication Views)
 # ----------------------------------------------------
 class CustomLoginView(LoginView):
     template_name = 'login.html'
@@ -141,10 +161,13 @@ class RegisterPage(FormView):
     def form_valid(self, form):
         user = form.save()
         if user is not None:
-            login(self.request, user) # রেজিস্ট্রেশন সফল হলে অটো-লগইন প্রোটেকশন
+            login(self.request, user)
         return super(RegisterPage, self).form_valid(form)
 
-# Notepad functionality views
+
+# ----------------------------------------------------
+# 📑 কুইক নোটস ইঞ্জিন (Notepad Functionality Views)
+# ----------------------------------------------------
 @login_required
 def note_list(request):
     if request.method == 'POST':
@@ -153,9 +176,21 @@ def note_list(request):
         if title and content:
             Note.objects.create(user=request.user, title=title, content=content)
             return redirect('note_list')
-            
-    notes = Note.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'notes.html', {'notes': notes})
+
+    query = request.GET.get('search', '').strip()
+    notes = Note.objects.filter(user=request.user)
+
+    if query:
+        notes = notes.filter(
+            Q(title__icontains=query) | Q(content__icontains=query)
+        )
+
+    notes = notes.order_by('-created_at')
+
+    return render(request, 'notes.html', {
+        'notes': notes,
+        'search_query': query
+    })
 
 @login_required
 def delete_note(request, note_id):

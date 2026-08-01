@@ -58,7 +58,7 @@
         </div>
         <div class="w-full bg-slate-950/60 rounded-full h-3 overflow-hidden p-[2px] border border-slate-800">
             <div class="bg-gradient-to-r from-emerald-400 via-cyan-400 to-indigo-500 h-full rounded-full transition-all duration-1000 ease-out shadow-[0_0_12px_rgba(52,211,153,0.3)]" 
-                 style="width: {{ progress }}%;">
+                 style="width: {{ progress }}percent;">
             </div>
         </div>
     </div>
@@ -86,8 +86,11 @@
                     <!-- ডেডলাইন ইনপুট -->
                     <div>
                         <label for="due_date" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Deadline</label>
-                        <input type="datetime-local" name="due_date" id="due_date" 
-                               class="w-full bg-slate-950/50 border border-slate-800 focus:border-emerald-500/60 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-emerald-500/30 transition-all duration-200">
+                        <input type="datetime-local" 
+                               name="due_date" 
+                               id="due_date" 
+                               required 
+                               class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-2.5 text-slate-100 outline-none">
                     </div>
                 </div>
 
@@ -146,14 +149,14 @@
                         <i class="fas fa-trash-alt text-xs"></i>
                     </a>
                     <div class="space-y-1.5 flex-grow">
-                        <!-- টাস্ক শিরোনাম -->
-                        <strong class="text-base font-semibold tracking-wide text-slate-200 block break-all {% if task.is_completed or task.is_missed %}line-through text-slate-500 font-normal{% endif %}">
+                        <!-- টাস্ক শিরোনাম (task-title-text ক্লাস যোগ করা হয়েছে) -->
+                        <strong class="task-title-text text-base font-semibold tracking-wide text-slate-200 block break-all {% if task.is_completed or task.is_missed %}line-through text-slate-500 font-normal{% endif %}">
                             {{ task.title }}
                         </strong>
                         
-                        <!-- 📝 টাস্কের বিস্তারিত বিবরণ -->
+                        <!-- 📝 টাস্কের বিস্তারিত বিবরণ (task-desc-text ক্লাস যোগ করা হয়েছে) -->
                         {% if task.description %}
-                        <p class="text-xs text-slate-400 font-normal leading-relaxed max-w-xl break-all {% if task.is_completed or task.is_missed %}line-through text-slate-600{% endif %}">
+                        <p class="task-desc-text text-xs text-slate-400 font-normal leading-relaxed max-w-xl break-all {% if task.is_completed or task.is_missed %}line-through text-slate-600{% endif %}">
                             {{ task.description }}
                         </p>
                         {% endif %}
@@ -211,10 +214,24 @@
     </div>
 </div>
 
-<!-- ⚙️ সিম্পল রিয়েল-টাইম অটো-স্ট্যাটাস চেঞ্জার স্ক্রিপ্ট -->
+<!-- ⚙️ অটো-স্ট্যাটাস এবং টাইম ভ্যালিডেশন স্ক্রিপ্ট -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // নোটিফিকেশন পারমিশন চাওয়া
+    // 🎯 ১. সঠিক লোকাল টাইমজোনে ডেট ইনপুটের min ভ্যালু সেট করা
+    const dueDateInput = document.getElementById('due_date');
+    if (dueDateInput) {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        
+        // YYYY-MM-DDTHH:MM ফরম্যাটে সেট
+        dueDateInput.min = `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+
+    // নোটিফিকেশন পারমিশন চাওয়া
     if (Notification.permission !== "granted" && Notification.permission !== "denied") {
         Notification.requestPermission();
     }
@@ -242,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // যদি কোনো ডেডলাইন না থাকে, সেটি সবসময় পেন্ডিং থাকবে
+            // যদি কোনো ডেডলাইন না থাকে, সেটি সবসময় পেন্ডিং থাকবে
             if (!dueString || dueString.trim() === "" || dueString === "None") {
                 if (timerDisplay) {
                     timerDisplay.innerHTML = `<span class="text-slate-500 font-normal"><i class="fas fa-infinity mr-1"></i>No Deadline</span>`;
@@ -251,12 +268,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // ডেডলাইনের সময় হিসাব (ইউজারের লোকাল টাইম অনুযায়ী)
+            // ডেডলাইনের সময় হিসাব
             const dueDate = new Date(dueString).getTime();
             const now = new Date().getTime();
             const timeLeft = dueDate - now;
 
-            // 🚨 ২. ডেডলাইন শেষ হয়ে গেলে (স্বয়ংক্রিয়ভাবে সরাসরি মিসড-এ রূপান্তর)
+            // 🚨 ২. ডেডলাইন শেষ হয়ে গেলে
             if (timeLeft <= 0) {
                 liveMissedCount++;
                 
@@ -264,11 +281,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (item.getAttribute('data-status') !== 'missed') {
                     item.setAttribute('data-status', 'missed');
                     
-                    // ভিজ্যুয়াল পরিবর্তন (লাল বর্ডার ও ব্যাকগ্রাউন্ড)
+                    // ভিজ্যুয়াল পরিবর্তন (লাল বর্ডার ও ব্যাকগ্রাউন্ড)
                     item.classList.remove('border-l-amber-500');
                     item.classList.add('border-l-rose-500', 'bg-rose-950/5');
 
-                    // টাইটেল ও ডেসক্রিপশন কেটে দেওয়া (Line-through)
+                    // টাইটেল ও ডেসক্রিপশন কেটে দেওয়া (Line-through)
                     const titleText = item.querySelector('.task-title-text');
                     if (titleText) titleText.classList.add('line-through', 'text-slate-500', 'font-normal');
                     const descText = item.querySelector('.task-desc-text');
@@ -312,7 +329,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (timerDisplay) {
                     timerDisplay.innerHTML = `<i class="fas fa-hourglass-start mr-1 text-[10px] opacity-70"></i>${timeText} remaining`;
 
-                    // কালার পরিবর্তন (১০ মিনিট এবং ১ ঘণ্টার সতর্কবার্তা)
+                    // কালার পরিবর্তন
                     if (totalMinutesLeft <= 10) { 
                         timerDisplay.className = "timer-display font-bold text-rose-400 animate-[pulse_1s_infinite]"; 
                     } else if (totalMinutesLeft <= 60) { 
@@ -324,31 +341,25 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // 📊 স্ক্রিনের ওপরের কাউন্টার কার্ডগুলো রিয়েল-টাইমে আপডেট করা
         updateDashboardCounters(livePendingCount, liveMissedCount, liveCompletedCount);
     }
 
-    // কাউন্টার কার্ডের সংখ্যা পরিবর্তন করার সাব-ফাংশন
     function updateDashboardCounters(pending, missed, completed) {
-        // Pending কার্ডের সংখ্যা আপডেট (২য় কার্ড)
         const pendingCard = document.querySelector('[onclick="filterTaskStream(\'pending\')"] h2');
         if (pendingCard) pendingCard.innerText = pending;
 
-        // Missed কার্ডের সংখ্যা আপডেট (৪র্থ কার্ড)
         const missedCard = document.querySelector('[onclick="filterTaskStream(\'missed\')"] h2');
         if (missedCard) missedCard.innerText = missed;
 
-        // Completed কার্ডের সংখ্যা আপডেট (৩য় কার্ড)
         const completedCard = document.querySelector('[onclick="filterTaskStream(\'completed\')"] h2');
         if (completedCard) completedCard.innerText = completed;
     }
 
-    // প্রতি ১ সেকেন্ড পর পর রিয়েল-টাইমে চেক করা হবে
     setInterval(updateTimersAndCounters, 1000);
     updateTimersAndCounters();
 });
 
-// 🔄 লাইভ স্মার্ট ফিল্টারিং এবং অটো-স্মুথ স্ক্রোলিং ইফেক্ট
+// 🔄 লাইভ ফিল্টারিং
 window.filterTaskStream = function(statusKey) {
     const taskItems = document.querySelectorAll('.task-item');
     
@@ -379,21 +390,17 @@ window.filterTaskStream = function(statusKey) {
         }
     });
 
-    // 🎯 ম্যাজিক স্ক্রোলিং কোড: ক্লিক করার সাথে সাথে টাস্ক লিস্ট কন্টেইনারে স্মুথলি নিয়ে যাবে
     const resultSection = document.getElementById('task-list-container');
     if (resultSection) {
         resultSection.scrollIntoView({ 
             behavior: 'smooth', 
-            block: 'center' // স্ক্রিনের একদম মাঝামাঝি এনে ফোকাস করবে
+            block: 'center'
         });
     }
 };
-
 </script>
 
-<!-- 🟢 জ্যাঙ্গো ফর্ম উইজেট এবং ক্যালেন্ডার আইকন স্টাইল ইঞ্জেকশন -->
 <style>
-    /* শুধু টেক্সট, টেক্সট-এরিয়া এবং ডেট-লোকালের জন্য প্রফেশনাল স্টাইল */
     form input[type="text"], 
     form textarea, 
     form input[type="datetime-local"] {
@@ -412,7 +419,6 @@ window.filterTaskStream = function(statusKey) {
         box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.3) !important;
     }
 
-    /* 📅 ক্যালেন্ডার আইকন সাদা করার গ্লোবাল রুল */
     input[type="datetime-local"]::-webkit-calendar-picker-indicator {
         filter: invert(1) brightness(1.2) !important;
         cursor: pointer !important;
