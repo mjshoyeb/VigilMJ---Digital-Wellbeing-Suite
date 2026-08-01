@@ -1,7 +1,8 @@
 🛡️ VigilMJ — Digital Wellbeing & Productivity Suite
+
 VigilMJ is not just another task manager; it is an all-in-one Digital Wellbeing & Productivity Suite designed to streamline daily workflows, prevent burnout, and foster focus. Built with a modern dark-glassmorphism UI, VigilMJ helps users balance intense task execution with mindful breaks.
 
-✨ Features Highlight
+**✨ Features Highlight**
 🚀 Live Features
 📋 Smart Task Management: Create, edit, and organize daily tasks with live progress tracking and automatic deadline validation.
 
@@ -13,7 +14,7 @@ VigilMJ is not just another task manager; it is an all-in-one Digital Wellbeing 
 
 🎨 Glassmorphism Metallic UI: Responsive, sleek, and animated dark-mode design powered by Tailwind CSS.
 
-🔮 Upcoming Features (Roadmap)
+**🔮 Upcoming Features (Roadmap)**
 ⏱️ Pomodoro Timer & Focus Mode: Distraction-free workspace with structured deep-work intervals.
 
 🧘 5-Minute Reset & Mindful Breaks: Built-in wellness prompts to avoid cognitive fatigue.
@@ -22,7 +23,7 @@ VigilMJ is not just another task manager; it is an all-in-one Digital Wellbeing 
 
 🚨 Forced Shutdown Alarm: (Desktop Helper Script) Intelligent screen-time limiter for healthy work-life balance.
 
-🛠️ Tech Stack
+**🛠️ Tech Stack**
 Backend: Python, Django Web Framework
 
 Frontend: HTML5, Tailwind CSS, JavaScript (ES6)
@@ -31,13 +32,13 @@ Icons & Fonts: FontAwesome 6, Google Fonts (Inter)
 
 Database: SQLite (Development) / PostgreSQL (Production ready)
 
-📦 Installation & Setup Guide
+**📦 Installation & Setup Guide**
 1. Clone the Repository
-Bash
+_Bash_
 git clone https://github.com/your-username/VigilMJ-Task-Manager.git
 cd VigilMJ-Task-Manager
 2. Create & Activate Virtual Environment
-Bash
+_Bash_
 # Windows
 python -m venv venv
 venv\Scripts\activate
@@ -46,19 +47,19 @@ venv\Scripts\activate
 python3 -m venv venv
 source venv/bin/activate
 3. Install Dependencies
-Bash
+_Bash_
 pip install -r requirements.txt
 4. Database Migrations
-Bash
+_Bash_
 python manage.py makemigrations
 python manage.py migrate
 5. Run the Server
-Bash
+_Bash_
 python manage.py runserver
 Visit [http://127.0.0.1:8000/](http://127.0.0.1:8000/) in your browser to explore VigilMJ.
 
-📂 Project Structure
-Plaintext
+**📂 Project Structure**
+
 VigilMJ_Project/
 │
 ├── my_site/              # Main Django Configuration
@@ -68,5 +69,6 @@ VigilMJ_Project/
 ├── db.sqlite3            # Database File
 ├── manage.py             # Django CLI Tool
 └── README.md             # Project Documentation
-📜 License & Copyright
+
+**📜 License & Copyright**
 © 2026 VigilMJ — Created with ❤️ for high-performance productivity and digital wellbeing. All Rights Reserved.
