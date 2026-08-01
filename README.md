@@ -1,4 +1,4 @@
-🛡️ VigilMJ — Digital Wellbeing & Productivity Suite
+**🛡️ VigilMJ — Digital Wellbeing & Productivity Suite**
 
 VigilMJ is not just another task manager; it is an all-in-one Digital Wellbeing & Productivity Suite designed to streamline daily workflows, prevent burnout, and foster focus. Built with a modern dark-glassmorphism UI, VigilMJ helps users balance intense task execution with mindful breaks.
 
@@ -70,7 +70,6 @@ Visit [http://127.0.0.1:8000/](http://127.0.0.1:8000/) in your browser to explor
 **📂 Project Structure**
 
 VigilMJ_Project/
-
 │
 ├── my_site/              # Main Django Configuration
 
