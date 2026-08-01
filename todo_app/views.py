@@ -11,6 +11,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone as django_timezone
 from datetime import datetime  # সরাসরি ব্যাকআপের জন্য
+from .models import Note 
+
 
 # ----------------------------------------------------
 # 🏠 হোম ড্যাশবোর্ড ইঞ্জিন (Dashboard Core View)
@@ -141,3 +143,22 @@ class RegisterPage(FormView):
         if user is not None:
             login(self.request, user) # রেজিস্ট্রেশন সফল হলে অটো-লগইন প্রোটেকশন
         return super(RegisterPage, self).form_valid(form)
+
+# Notepad functionality views
+@login_required
+def note_list(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        if title and content:
+            Note.objects.create(user=request.user, title=title, content=content)
+            return redirect('note_list')
+            
+    notes = Note.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'notes.html', {'notes': notes})
+
+@login_required
+def delete_note(request, note_id):
+    note = get_object_or_404(Note, id=note_id, user=request.user)
+    note.delete()
+    return redirect('note_list')

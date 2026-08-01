@@ -45,4 +45,7 @@ urlpatterns = [
     path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('register/', RegisterPage.as_view(), name='register'),
+
+    path('notes/', main_views.note_list, name='note_list'),
+    path('notes/delete/<int:note_id>/', main_views.delete_note, name='delete_note'),
 ]
